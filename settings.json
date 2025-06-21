@@ -1,0 +1,10 @@
+{
+   "TenantId": "<your-tenant-id>",
+   "AppId": "<your-client-id>",
+   "GraphScopes": "Device.ReadWrite.All",
+   "ConfigVersion": "1.0.0",
+   "MigrationFlags": {
+     "EnableAutoLogon": true,
+     "RebootAfter": true
+   }
+ }

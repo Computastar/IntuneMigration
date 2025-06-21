@@ -14,8 +14,8 @@
   <button onclick="save()">Save Config</button>
 
   <script>
-    const blobBase = "https://contosoconfigstore.blob.core.windows.net/config";
-    const sasToken = "<your-SAS-token>"; // Optional, if write-access needed
+    const blobBase = "https://migrationonfigstore.blob.core.windows.net/config";
+    const sasToken = "sp=r&st=2025-06-21T11:31:32Z&se=2025-06-21T19:31:32Z&spr=https&sv=2024-11-04&sr=c&sig=VcWg5Pqbp02jK8O2E%2B0NwOFOXPY8lhUD1s%2FUgre3Vlk%3D"; // Optional, if write-access needed
 
     fetch(`${blobBase}/settings.json`)
       .then(r => r.json())
