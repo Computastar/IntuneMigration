@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Intune Migration Config Editor</title>
+  <style>
+    body { font-family: sans-serif; margin: 2rem; }
+    textarea { width: 100%; height: 300px; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <h1>Intune Migration Config Editor</h1>
+  <textarea id="jsonConfig"></textarea><br>
+  <button onclick="save()">Save Config</button>
+
+  <script>
+    const blobBase = "https://contosoconfigstore.blob.core.windows.net/config";
+    const sasToken = "<your-SAS-token>"; // Optional, if write-access needed
+
+    fetch(`${blobBase}/settings.json`)
+      .then(r => r.json())
+      .then(j => document.getElementById("jsonConfig").value = JSON.stringify(j, null, 2));
+
+    async function save() {
+      const text = document.getElementById("jsonConfig").value;
+      const res = await fetch(`${blobBase}/settings.json${sasToken}`, {
+        method: "PUT",
+        headers: {
+          "x-ms-blob-type": "BlockBlob",
+          "Content-Type": "application/json"
+        },
+        body: text
+      });
+      if (res.ok) alert("Updated!");
+      else alert("Failed: " + res.status);
+    }
+  </script>
+</body>
+</html>
