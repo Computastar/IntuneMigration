@@ -35,7 +35,9 @@
 
     async function loadConfig() {
       const res = await fetch(settingsUrl);
+      console.log(res);
       const config = await res.json();
+      console.log(config);
       document.getElementById("jsonConfig").value = JSON.stringify(config, null, 2);
     }
 
