@@ -16,29 +16,54 @@
 </div>
 <p>Signed in as: <span id="user">loading...</span></p>
   <textarea id="jsonConfig"></textarea><br>
-  <button onclick="save()">Save Config</button>
+  <br>
+  <button onclick="saveConfig()">💾 Save Config</button>
 
   <script>
     const blobBase = "https://migrationonfigstore.blob.core.windows.net/config";
     const sasToken = "sp=r&st=2025-06-21T11:31:32Z&se=2025-06-21T19:31:32Z&spr=https&sv=2024-11-04&sr=c&sig=VcWg5Pqbp02jK8O2E%2B0NwOFOXPY8lhUD1s%2FUgre3Vlk%3D"; // Optional, if write-access needed
 
-    fetch(`${blobBase}/settings[1].json`)
-      .then(r => r.json())
-      .then(j => document.getElementById("jsonConfig").value = JSON.stringify(j, null, 2));
+    const settingsUrl = `${blobBase}/settings.json`;
+    const sigUrl = `${blobBase}/settings.sig`;
 
-    async function save() {
-      const text = document.getElementById("jsonConfig").value;
-      const res = await fetch(`${blobBase}/settings.json${sasToken}`, {
+    async function getUserInfo() {
+      const res = await fetch("/.auth/me");
+      const data = await res.json();
+      const user = data[0]?.userDetails || "unknown";
+      document.getElementById("user").textContent = user;
+    }
+
+    async function loadConfig() {
+      const res = await fetch(settingsUrl);
+      const config = await res.json();
+      document.getElementById("jsonConfig").value = JSON.stringify(config, null, 2);
+    }
+
+    async function saveConfig() {
+      const configText = document.getElementById("jsonConfig").value;
+
+      // Upload the config
+      const uploadRes = await fetch(settingsUrl, {
         method: "PUT",
         headers: {
           "x-ms-blob-type": "BlockBlob",
           "Content-Type": "application/json"
         },
-        body: text
+        body: configText
       });
-      if (res.ok) alert("Updated!");
-      else alert("Failed: " + res.status);
+
+      if (!uploadRes.ok) {
+        alert("Failed to upload config.");
+        return;
+      }
+
+      alert("✅ Config uploaded successfully.\n⚠️ Remember to update the signature!");
+
+      // TODO: You could trigger a signed upload via GitHub Actions or a secured Azure Function.
     }
+
+    getUserInfo();
+    loadConfig();
   </script>
 </body>
 </html>
