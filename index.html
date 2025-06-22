@@ -7,10 +7,14 @@
     body { font-family: sans-serif; margin: 2rem; }
     textarea { width: 100%; height: 300px; font-family: monospace; }
   </style>
-  <a href="/.auth/login/aad">Login</a>
 </head>
 <body>
   <h1>Intune Migration Config Editor</h1>
+  <div>
+  <a href="/.auth/login/aad">🔐 Login with Entra ID</a>
+  <a href="/.auth/logout">🚪 Logout</a>
+</div>
+<p>Signed in as: <span id="user">loading...</span></p>
   <textarea id="jsonConfig"></textarea><br>
   <button onclick="save()">Save Config</button>
 
